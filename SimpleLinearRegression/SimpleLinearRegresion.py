@@ -7,7 +7,7 @@ def derivate1(listX, listY, linearFunctionParams):
     else:
         listSize = len(listY)
         listOfSums = [-2*(listY[i]-(linearFunctionParams[0]*listX[i] +
-                                    linearFunctionParams[1]))*listX[i] for i in range(listSize)]
+                                    linearFunctionParams[1]))*linearFunctionParams[0] for i in range(listSize)]
         return float((sum(listOfSums)) / listSize)
 
 
@@ -29,7 +29,7 @@ def lossFunction(listX, listY, linearFunctionParams):
         listOfSums = [pow((listY[i]-(linearFunctionParams[0]*listX[i] +
                                      linearFunctionParams[1])), 2) for i in range(listSize)]
         value = sum(listOfSums)
-        return float(sum / listSize)
+        return float(value / listSize)
 
 
 class SimpleLinearRegression:
@@ -47,15 +47,19 @@ class SimpleLinearRegression:
             x0 = float(Y[0] - X[0]*x1)
             realX0 = x0
             realX1 = x1
-            params = [realX0, realX1]
+            params = [realX1, realX0]
+            minimum, maximum = None, None
             for i in range(self.iterationNumbers):
-                realX0 = min(realX0, realX0-self.learningRateAlfa *
-                             derivate1(X, Y, params))
-                realX1 = min(realX1, realX1-self.learningRateAlfa *
-                             derivate2(X, Y, params))
-            self.x1 = realX1
-            self.x0 = realX0
-            # return [realX1, realX0]
+                newParams = [params[0]-self.learningRateAlfa *
+                             derivate1(X, Y, params), params[1]-self.learningRateAlfa *
+                             derivate2(X, Y, params)]
+                minimum = min(lossFunction(X, Y, params),
+                              lossFunction(X, Y, newParams))
+                if minimum == lossFunction(X, Y, newParams):
+                    params = newParams
+
+            self.x1 = params[0]
+            self.x0 = params[1]
 
     def predict(self, X):
         try:
@@ -66,7 +70,8 @@ class SimpleLinearRegression:
 
 
 x = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
-y = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+y = [4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4]
+z = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
 predicty = SimpleLinearRegression()
-predicty.fitWhenTraining(x, y)
-print(predicty.predict(11))
+predicty.fitWhenTraining(x, z)
+print(predicty.predict(113))
