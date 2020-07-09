@@ -67,11 +67,3 @@ class SimpleLinearRegression:
             return float(X*self.x1 + self.x0)
         except:
             raise Exception("{} is not a valid number".format(X))
-
-
-x = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
-y = [4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4]
-z = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
-predicty = SimpleLinearRegression()
-predicty.fitWhenTraining(x, z)
-print(predicty.predict(113))
